@@ -30,6 +30,7 @@ export default function Blotter() {
   const counterRef2 = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
+    let rafId: number;
     const ws = new WebSocket('wss://advanced-trade-ws.coinbase.com');
     ws.onopen = () => {
       ws.send(JSON.stringify({
@@ -45,7 +46,8 @@ export default function Blotter() {
       if (counterRef1.current)
         counterRef1.current.innerText = String(parseInt(counterRef1.current.innerText) + 1);
 
-      requestAnimationFrame(() => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
         const priceCell = display.current?.querySelector('#price');
         if (priceCell) priceCell.textContent = price;
 
