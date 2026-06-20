@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import {useRef} from 'react';
 
-
-
 export default function Blotter() {
 
   const display = useRef(null); 
