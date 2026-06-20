@@ -24,30 +24,49 @@ type Level2Message = Level2Snapshot | Level2Update | SubscriptionsMessage;
 
 export default function Blotter() {
 
-  const display = useRef<HTMLTableElement>(null); 
+  const display = useRef<HTMLTableElement>(null);
+
+  const counterRef1 = useRef<HTMLSpanElement>(null);
+  const counterRef2 = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const ws = new WebSocket('wss://advanced-trade-ws.coinbase.com');
     ws.onopen = () => {
-    // Only subscribe AFTER the connection is open
       ws.send(JSON.stringify({
           type: 'subscribe',
           product_ids: ['LTC-USD'],
           channel: 'level2'
       }));
     };
-      ws.onmessage = (event: MessageEvent) => {
+    ws.onmessage = (event: MessageEvent) => {
       const message = JSON.parse(event.data);
+      const price = message.events[0].updates[0].price_level;
 
-      // Data Process Blocks, best bid & best sell with current event batch, now how how this works
-    
-      const price = message.events[0].updates[0].price_level; // this contains bid and offer
-      const priceCell = display.current?.querySelector('#price');
-      if (priceCell) priceCell.textContent = price;
+      if (counterRef1.current)
+        counterRef1.current.innerText = String(parseInt(counterRef1.current.innerText) + 1);
+
+      requestAnimationFrame(() => {
+        const priceCell = display.current?.querySelector('#price');
+        if (priceCell) priceCell.textContent = price;
+
+        if (counterRef2.current)
+          counterRef2.current.innerText = String(parseInt(counterRef2.current.innerText) + 1);
+      });
     };
-  })
+  }, [])
+  
+  
+  //snapshot delta pattern now. 
 
   return <div>
+    <p>
+      Messgae Counter
+      <span ref={counterRef1}>0</span>
+    </p>
+    <p>
+      Paint Counter
+      <span ref={counterRef2}>0</span>
+    </p>
     <table ref={display}>
       <thead>
         <tr>
