@@ -38,6 +38,9 @@ export default function Blotter() {
     };
       ws.onmessage = (event: MessageEvent) => {
       const message = JSON.parse(event.data);
+
+      // Data Process Blocks, best bid & best sell with current event batch, now how how this works
+    
       const price = message.events[0].updates[0].price_level; // this contains bid and offer
       const priceCell = display.current?.querySelector('#price');
       if (priceCell) priceCell.textContent = price;
