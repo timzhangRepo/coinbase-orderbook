@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import {useRef} from 'react';
 
-
 type Level2Snapshot = {
   type: 'snapshot';
   product_id: string;
@@ -22,7 +21,6 @@ type SubscriptionsMessage = {
 };
 
 type Level2Message = Level2Snapshot | Level2Update | SubscriptionsMessage;
-
 
 export default function Blotter() {
 
@@ -45,8 +43,6 @@ export default function Blotter() {
       if (priceCell) priceCell.textContent = price;
     };
   })
-
-
 
   return <div>
     <table ref={display}>
